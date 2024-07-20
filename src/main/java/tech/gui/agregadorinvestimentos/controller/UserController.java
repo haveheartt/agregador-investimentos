@@ -7,7 +7,6 @@ import tech.gui.agregadorinvestimentos.service.UserService;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -48,7 +47,6 @@ public class UserController {
         userService.updateUserById(userId, updateUserDTO);
         return ResponseEntity.noContent().build();
     }
-
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteById(@PathVariable("userId") String userId) {
