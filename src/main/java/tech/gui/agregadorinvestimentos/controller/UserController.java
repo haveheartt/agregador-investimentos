@@ -9,7 +9,7 @@ import tech.gui.agregadorinvestimentos.entity.User;
 public class UserController {
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody String body){
+    public ResponseEntity<User> createUser(@RequestBody CreateUserDTO createUserDto){
         return null;
     }
 
