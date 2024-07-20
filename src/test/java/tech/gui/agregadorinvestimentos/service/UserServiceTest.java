@@ -14,6 +14,7 @@ import tech.gui.agregadorinvestimentos.entity.User;
 import tech.gui.agregadorinvestimentos.repository.UserRepository;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -136,5 +137,35 @@ class UserServiceTest {
             assertEquals(userId, uuidArgumentCaptor.getValue());
         }
 
+    }
+
+    @Nested
+    class listUsers {
+
+        @Test
+        @DisplayName("it should return all users with success")
+        void shouldReturnAllUsersWithSuccess() {
+
+            //arrange
+            var user = new User(
+                    UUID.randomUUID(),
+                    "username",
+                    "email@email.com",
+                    "123",
+                    Instant.now(),
+                    null
+            );
+            var userList = List.of(user);
+            doReturn(userList)
+                    .when(userRepository)
+                    .findAll();
+
+            //act
+            var output = userService.listUsers();
+
+            //assert
+            assertNotNull(output);
+            assertEquals(userList.size(), output.size());
+        }
     }
 }
