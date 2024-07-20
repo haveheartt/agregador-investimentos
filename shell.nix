@@ -5,6 +5,7 @@ pkgs.mkShell {
   nativeBuildInputs = with pkgs; [
     maven
     openjdk22
+    dbeaver-bin
   ];
   shellHook = ''
         export JAVA_HOME=${pkgs.openjdk22}

@@ -9,8 +9,8 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tech.gui.agregadorinvestimentos.controller.CreateUserDTO;
-import tech.gui.agregadorinvestimentos.controller.UpdateUserDTO;
+import tech.gui.agregadorinvestimentos.controller.dto.CreateUserDTO;
+import tech.gui.agregadorinvestimentos.controller.dto.UpdateUserDTO;
 import tech.gui.agregadorinvestimentos.entity.User;
 import tech.gui.agregadorinvestimentos.repository.UserRepository;
 
