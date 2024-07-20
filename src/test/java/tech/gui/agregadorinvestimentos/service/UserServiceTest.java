@@ -20,8 +20,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -168,4 +167,34 @@ class UserServiceTest {
             assertEquals(userList.size(), output.size());
         }
     }
+
+
+    @Nested
+    class deleteById {
+
+        @Test
+        @DisplayName("it should delete user with success")
+        void shouldDeleteUseWithSuccess() {
+
+            //arrange
+            doReturn(true)
+                    .when(userRepository)
+                    .existsById(uuidArgumentCaptor.capture());
+            doNothing()
+                    .when(userRepository)
+                    .deleteById(uuidArgumentCaptor.capture());
+            var userId = UUID.randomUUID();
+
+            //act
+            userService.deleteById(userId.toString());
+
+            //assert
+            var idList = uuidArgumentCaptor.getAllValues();
+            assertEquals(userId, idList.get(0));
+            assertEquals(userId, idList.get(1));
+
+
+        }
+    }
+
 }
