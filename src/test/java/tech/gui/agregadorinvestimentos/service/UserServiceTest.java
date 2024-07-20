@@ -14,6 +14,7 @@ import tech.gui.agregadorinvestimentos.entity.User;
 import tech.gui.agregadorinvestimentos.repository.UserRepository;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +33,9 @@ class UserServiceTest {
 
     @Captor
     private ArgumentCaptor<User> userArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<UUID> uuidArgumentCaptor;
 
     @Nested
     class createUser {
@@ -86,4 +90,51 @@ class UserServiceTest {
 
     }
 
+    @Nested
+    class getUserById {
+
+        @Test
+        @DisplayName("it should get an user by id with success when optional is present")
+        void shouldGetUserByIdWithSuccessWhenOptionalIsPresent() {
+
+            //arrange
+            var user = new User(
+                    UUID.randomUUID(),
+                    "username",
+                    "email@email.com",
+                    "123",
+                    Instant.now(),
+                    null
+            );
+            doReturn(Optional.of(user)).when(userRepository).findById(uuidArgumentCaptor.capture());
+
+
+
+            //act
+            var output = userService.getUserById(user.getUserId().toString());
+
+            //assert
+            assertTrue(output.isPresent());
+            assertEquals(user.getUserId(), uuidArgumentCaptor.getValue());
+        }
+
+        @Test
+        @DisplayName("it should get an user by id with success when optional is empty")
+        void shouldGetUserByIdWithSuccessWhenOptionalIsEmpty() {
+
+            //arrange
+            var userId = UUID.randomUUID();
+            doReturn(Optional.empty())
+                    .when(userRepository)
+                    .findById(uuidArgumentCaptor.capture());
+
+            //act
+            var output = userService.getUserById(userId.toString());
+
+            //assert
+            assertTrue(output.isEmpty());
+            assertEquals(userId, uuidArgumentCaptor.getValue());
+        }
+
+    }
 }
