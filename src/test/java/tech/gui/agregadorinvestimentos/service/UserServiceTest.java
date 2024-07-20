@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tech.gui.agregadorinvestimentos.controller.CreateUserDTO;
+import tech.gui.agregadorinvestimentos.controller.UpdateUserDTO;
 import tech.gui.agregadorinvestimentos.entity.User;
 import tech.gui.agregadorinvestimentos.repository.UserRepository;
 
@@ -107,8 +108,6 @@ class UserServiceTest {
                     null
             );
             doReturn(Optional.of(user)).when(userRepository).findById(uuidArgumentCaptor.capture());
-
-
 
             //act
             var output = userService.getUserById(user.getUserId().toString());
@@ -221,4 +220,45 @@ class UserServiceTest {
 
     }
 
+    @Nested
+    class updateUserById {
+
+        @Test
+        @DisplayName("it should update user by id when user exists and username and password are filled")
+        void shouldUpdateUserByIdWhenUserExistsAndUsernameAndPasswordAreFilled() {
+
+            //arrange
+            var updateUserDto = new UpdateUserDTO(
+                    "newusername",
+                    "newpassword"
+            );
+            var user = new User(
+                    UUID.randomUUID(),
+                    "username",
+                    "email@email.com",
+                    "123",
+                    Instant.now(),
+                    null
+            );
+            doReturn(Optional.of(user))
+                    .when(userRepository)
+                    .findById(uuidArgumentCaptor.capture());
+            doReturn(user)
+                    .when(userRepository)
+                    .save(userArgumentCaptor.capture());
+
+            //act
+            userService.updateUserById(user.getUserId().toString(), updateUserDto);
+
+            //assert
+            assertEquals(user.getUserId(), uuidArgumentCaptor.getValue());
+            var userCaptured = userArgumentCaptor.getValue();
+
+            assertEquals(user.getUsername(), userCaptured.getUsername());
+            assertEquals(user.getPassword(), userCaptured.getPassword());
+
+            verify(userRepository, times(1)).findById(uuidArgumentCaptor.getValue());
+            verify(userRepository, times(1)).save(user);
+        }
+    }
 }
