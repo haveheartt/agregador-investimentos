@@ -260,5 +260,30 @@ class UserServiceTest {
             verify(userRepository, times(1)).findById(uuidArgumentCaptor.getValue());
             verify(userRepository, times(1)).save(user);
         }
+
+        @Test
+        @DisplayName("it should not update user when user not exists")
+        void shouldNotUpdateUserWhenUserNotExists() {
+
+            //arrange
+            var updateUserDto = new UpdateUserDTO(
+                    "newusername",
+                    "newpassword"
+            );
+
+            var userId = UUID.randomUUID();
+            doReturn(Optional.empty())
+                    .when(userRepository)
+                    .findById(uuidArgumentCaptor.capture());
+
+            //act
+            userService.updateUserById(userId.toString(), updateUserDto);
+
+            //assert
+            assertEquals(userId, uuidArgumentCaptor.getValue());
+
+            verify(userRepository, times(1)).findById(uuidArgumentCaptor.getValue());
+            verify(userRepository, times(0)).save(any());
+        }
     }
 }
