@@ -173,8 +173,8 @@ class UserServiceTest {
     class deleteById {
 
         @Test
-        @DisplayName("it should delete user with success")
-        void shouldDeleteUseWithSuccess() {
+        @DisplayName("it should delete user with success when user exists")
+        void shouldDeleteUseWithSuccessWhenUserExists() {
 
             //arrange
             doReturn(true)
@@ -193,8 +193,32 @@ class UserServiceTest {
             assertEquals(userId, idList.get(0));
             assertEquals(userId, idList.get(1));
 
+            verify(userRepository, times(1)).existsById(idList.get(0));
+            verify(userRepository, times(1)).deleteById(idList.get(1));
 
         }
+
+
+        @Test
+        @DisplayName("it should NOT delete user with success when user NOT exists")
+        void shouldNotDeleteUseWithSuccessWhenUserNotExists() {
+
+            //arrange
+            doReturn(false)
+                    .when(userRepository)
+                    .existsById(uuidArgumentCaptor.capture());
+            var userId = UUID.randomUUID();
+
+            //act
+            userService.deleteById(userId.toString());
+
+            //assert
+            assertEquals(userId, uuidArgumentCaptor.getValue());
+
+            verify(userRepository, times(1)).existsById(uuidArgumentCaptor.getValue());
+            verify(userRepository, times(0)).deleteById(any());
+        }
+
     }
 
 }
