@@ -25,7 +25,6 @@ public class Account {
     @PrimaryKeyJoinColumn
     private BillingAddress billingAddress;
 
-
     @OneToMany(mappedBy = "account")
     private List<AccountStock> accountStocks;
 
